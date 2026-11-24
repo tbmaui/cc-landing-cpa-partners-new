@@ -1,0 +1,43 @@
+name: Check React and WordPress
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: react/package-lock.json
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Install React dependencies
+        working-directory: react
+        run: npm ci
+      - name: Build React
+        working-directory: react
+        run: npm run build
+      - name: Test React
+        working-directory: react
+        run: npm test
+      - name: Check TypeScript
+        working-directory: react
+        run: npx tsc --noEmit
+      - name: Lint React
+        working-directory: react
+        run: npm run lint
+      - name: Validate native blocks
+        run: node tools/validate-blocks.js
+      - name: Check WordPress PHP syntax
+        run: find wordpress -name '*.php' -print0 | xargs -0 -n1 php -l

@@ -1,0 +1,14 @@
+* text=auto
+*.php text eol=lf
+*.js text eol=lf
+*.cjs text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.woff2 binary
+*.jpg binary
+*.png binary
+*.ico binary
+source/react-export/** -text
